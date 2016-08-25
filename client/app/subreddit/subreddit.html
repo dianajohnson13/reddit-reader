@@ -10,4 +10,17 @@
       </li>
     </ul>
   <div>
+  <div id="subreddit-adder">
+    <div><strong>Current Subreddits:</strong></div>
+    <div id="current-topics" ng-repeat="(subreddit, name) in data.subreddits">
+      <span>
+        <div>{{subreddit}}</div>
+        <a class="btn" ng-click="removeTopic(subreddit)">x</a>
+      </span>
+    </div>
+    <form ng-submit='addTopic(newTopic)'>
+      <input class='add-topic' placeholder='Add topic' ng-model="newTopic"/>
+      <button type='submit'>Add</button>
+    </form>
+  </div>
 </div>

@@ -2,7 +2,7 @@ angular.module('reader.subreddit', [])
 
 .controller('SubRedditController', function ($scope, PostGetter, $location) {
   $scope.data = {};
-  $scope.subreddits = [];
+  $scope.data.subreddits = {};
 
   $scope.getWhatsHot = function() {
     console.log('getWhatsHot')
@@ -12,15 +12,19 @@ angular.module('reader.subreddit', [])
     });
   };
 
-  $scope.getSubreddits = function(urlpath) {
-    console.log('getSubreddits')
-    $scope.subreddits = urlpath.slice(1, urlpath.length).split("+");
-
-    PostGetter.getSubreddits($scope.subreddits).then(function(resp) {
+  $scope.getSubreddits = function() {
+    PostGetter.getSubreddits(Object.keys($scope.data.subreddits)).then(function(resp) {
       $scope.data.posts = resp.data;
       console.log($scope.data.posts)
     });
   };
+
+  $scope.setSubredditsFromUrl = function(urlpath) {
+    subreddits = urlpath.slice(1, urlpath.length).split("+");
+    subreddits.forEach(function(topic) {
+      $scope.data.subreddits[topic] = topic;
+    })
+  }
 
   $scope.directUrlPath = function() {
     urlpath = $location.path();
@@ -33,8 +37,24 @@ angular.module('reader.subreddit', [])
         $scope.getWhatsHot();
         break;
       default:
-        $scope.getSubreddits(urlpath);
+        $scope.setSubredditsFromUrl(urlpath);
+        $scope.getSubreddits();
     }
   }();
+
+  $scope.updatepath = function() {
+    path = "/" + Object.keys($scope.data.subreddits).join("+");
+    $location.path(path);
+  }
+
+  $scope.addTopic = function(newTopic) {
+    $scope.data.subreddits[newTopic] = newTopic;
+    $scope.updatepath();
+  }
+
+  $scope.removeTopic = function(oldTopic) {
+    delete $scope.data.subreddits[oldTopic];
+    $scope.updatepath();
+  }
 
 });

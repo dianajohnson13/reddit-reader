@@ -12,7 +12,19 @@ angular.module('reader.services', [])
     });
   };
 
+  var getSubreddits = function (topics) {
+    return $http({
+      method: 'POST',
+      url: '/api/subreddits',
+      data: {topics: topics}
+    })
+    .then(function (resp) {
+      return resp;
+    });
+  };
+
   return {
-    getWhatsHot: getWhatsHot
+    getWhatsHot: getWhatsHot,
+    getSubreddits: getSubreddits
   };
 })

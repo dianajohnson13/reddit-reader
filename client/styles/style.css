@@ -1,0 +1,46 @@
+.container {
+  padding-top: 10px;
+}
+
+/* current subreddit list and adder */
+
+#subreddit-adder {
+  padding: 20px;
+  text-align: center;
+}
+
+#current-topics ul {
+  list-style: none;
+}
+
+#current-topics ul li {
+  align: left;
+}
+
+a:hover { 
+  font-weight: bold;
+}
+
+#add-topic {
+  width: 12em;
+  display: inline;
+}
+
+/* posts */
+
+#posts ul {
+  list-style: none;
+}
+
+.post {
+  padding: 4px;
+  border-bottom: 1px solid #d9d9d9;
+}
+
+#post-info div p {
+  margin: 0px;
+}
+
+.post-title {
+  font-weight: bold;
+}

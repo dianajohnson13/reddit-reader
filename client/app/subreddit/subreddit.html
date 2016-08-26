@@ -1,26 +1,43 @@
-<div>
-  <div id='container'>
-    <ul>
-      <li class="post" ng-repeat="post in data.posts">
-        <div>
-        <span class='info'>
-          <div class="title">{{post.data.title}}</div> 
-        </span>
-        </div>
-      </li>
-    </ul>
-  <div>
-  <div id="subreddit-adder">
-    <div><strong>Current Subreddits:</strong></div>
-    <div id="current-topics" ng-repeat="(subreddit, name) in data.subreddits">
-      <span>
-        <div>{{subreddit}}</div>
-        <a class="btn" ng-click="removeTopic(subreddit)">x</a>
-      </span>
+<div class="container">
+  <div id="feed"class="row">
+  
+    <div id="subreddit-adder" class="col-md-3">
+      <p><strong>Current Subreddits</strong></p>
+      <div id="current-topics">
+        <ul>
+          <li id="topic" ng-repeat="(subreddit, name) in data.subreddits">
+            <div>
+              <span>{{subreddit}}</span>
+              <span><a class="btn" ng-click="removeTopic(subreddit)">x</a></span>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <form ng-submit='addTopic(newTopic)'>
+        <input id="add-topic" class="form-control" placeholder='Add topic' ng-model="newTopic"/>
+        <button class="btn"type='submit'>Add</button>
+      </form>
     </div>
-    <form ng-submit='addTopic(newTopic)'>
-      <input class='add-topic' placeholder='Add topic' ng-model="newTopic"/>
-      <button type='submit'>Add</button>
-    </form>
+
+    <div id='posts' class="col-md-9">
+      <ul>
+        <li class="post" ng-repeat="post in data.posts">
+          <div>
+          <span id='post-info' class="row">
+            <div class="col-md-3">
+              <img class="image" src={{post.data.thumbnail}} alt="">
+            </div>
+            <div class="col-md-8">
+              <a class="post-title" href={{post.data.url}} target="_blank">{{post.data.title}}</a>
+              <p class="author-date-time">Submitted by {{post.data.author}}</p>
+              <p class="subred">Subreddit: {{post.data.subreddit}}</p>
+            </div>
+
+          </span>
+          </div>
+        </li>
+      </ul>
+    <div>
+
   </div>
 </div>

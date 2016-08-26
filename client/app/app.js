@@ -4,7 +4,7 @@ angular.module('reader', [
   'ngRoute',
   'infinite-scroll'
 ])
-.config(function($routeProvider, $httpProvider) {
+.config(function($routeProvider, $httpProvider, $locationProvider) {
   $routeProvider
     .when('/*', {
       templateUrl: 'app/subreddit/subreddit.html',
@@ -14,4 +14,6 @@ angular.module('reader', [
       templateUrl: 'app/subreddit/subreddit.html',
       controller: 'SubRedditController'
     })
+
+    $locationProvider.html5Mode(true);
 })

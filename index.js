@@ -21,6 +21,13 @@ app.post('/api/subreddits', function(req, res) {
   getSubreddits(req, res);
 });
 
+
+// Since we are using HTML5 mode we want to route all non server side
+// routes back to angular's routing
+app.get('/*', function(req, res) {
+  res.sendFile('index.html', { root: __dirname + '/client'});
+})
+
 function getHot(req, resp) {
   if (req.body.after === null) {
     reddit.list().hot().limit(25, handleRedditResp)
@@ -28,8 +35,11 @@ function getHot(req, resp) {
     reddit.list().hot().after(req.body.after).limit(25, handleRedditResp)
   }
 
+  // handleRedditResp should be made more robust and modularized to not be repeated
+  // in both getSubreddits and getHot(and future handlers). Due to time constraints
+  // this is left as a todo.
   function handleRedditResp(err, data, r){
-    if (err) {
+    if (err || r.statusCode != 200) {
       console.log(err)
       resp.status(500).send("Error getting reddit hot posts: ", err);
     } else {
@@ -50,8 +60,11 @@ function getSubreddits(req, resp) {
     reddit.r(requestedTopics).after(req.body.after).limit(25, handleRedditResp)
   }
 
+  // handleRedditResp should be made more robust and modularized to not be repeated
+  // in both getSubreddits and getHot(and future handlers). Due to time constraints
+  // this is left as a todo.
   function handleRedditResp(err, data, r){
-    if (err) {
+    if (err || r.statusCode != 200) {
       console.log(err)
       resp.status(500).send("Error getting reddit subreddit posts: ", err);
     } else {

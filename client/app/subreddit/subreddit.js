@@ -5,17 +5,14 @@ angular.module('reader.subreddit', [])
   $scope.data.subreddits = {};
 
   $scope.getWhatsHot = function() {
-    console.log('getWhatsHot')
     PostGetter.getWhatsHot().then(function(resp) {
       $scope.data.posts = resp.data
-      console.log($scope.data.posts)
     });
   };
 
   $scope.getSubreddits = function() {
     PostGetter.getSubreddits(Object.keys($scope.data.subreddits)).then(function(resp) {
       $scope.data.posts = resp.data;
-      console.log($scope.data.posts)
     });
   };
 
@@ -28,7 +25,6 @@ angular.module('reader.subreddit', [])
 
   $scope.directUrlPath = function() {
     urlpath = $location.path();
-    console.log(urlpath)
     switch (urlpath) {
       case "/":
         $scope.getWhatsHot();
@@ -49,7 +45,6 @@ angular.module('reader.subreddit', [])
 
   $scope.addTopic = function(newTopic) {
     if (typeof newTopic !== "undefined" && newTopic !== "") {
-      console.log(newTopic)
       $scope.data.subreddits[newTopic] = newTopic;
       $scope.updatepath();
     }

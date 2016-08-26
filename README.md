@@ -25,3 +25,7 @@ Deployed at: https://evening-retreat-24688.herokuapp.com/
  
 		git clone https://github.com/dianajohnson13/reddit-reader.git
     	npm install
+    	
+    	
+## Run
+		npm start

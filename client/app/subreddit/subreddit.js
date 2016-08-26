@@ -48,8 +48,11 @@ angular.module('reader.subreddit', [])
   }
 
   $scope.addTopic = function(newTopic) {
-    $scope.data.subreddits[newTopic] = newTopic;
-    $scope.updatepath();
+    if (typeof newTopic !== "undefined" && newTopic !== "") {
+      console.log(newTopic)
+      $scope.data.subreddits[newTopic] = newTopic;
+      $scope.updatepath();
+    }
   }
 
   $scope.removeTopic = function(oldTopic) {

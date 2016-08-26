@@ -57,4 +57,9 @@ angular.module('reader.subreddit', [])
     $scope.updatepath();
   }
 
+  $scope.relativeTime = function(timestamp) {
+    var relTime = moment(timestamp, "X").fromNow();
+    return relTime;
+  }
+
 });

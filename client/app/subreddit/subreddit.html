@@ -29,7 +29,7 @@
             </div>
             <div class="col-md-8">
               <a class="post-title" href={{post.data.url}} target="_blank">{{post.data.title}}</a>
-              <p class="author-date-time">Submitted by {{post.data.author}}</p>
+              <p class="author-date-time">Submitted {{relativeTime(post.data.created_utc)}} by {{post.data.author}}</p>
               <p class="subred">Subreddit: {{post.data.subreddit}}</p>
             </div>
 

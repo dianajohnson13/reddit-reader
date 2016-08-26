@@ -1,7 +1,8 @@
 angular.module('reader', [
   'reader.services',
   'reader.subreddit',
-  'ngRoute'
+  'ngRoute',
+  'infinite-scroll'
 ])
 .config(function($routeProvider, $httpProvider) {
   $routeProvider

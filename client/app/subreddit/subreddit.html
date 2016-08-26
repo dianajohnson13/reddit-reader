@@ -19,7 +19,7 @@
       </form>
     </div>
 
-    <div id='posts' class="col-md-9">
+    <div id='posts' class="col-md-9" infinite-scroll="getMorePosts()" infinite-scroll-distance="3">
       <ul>
         <li class="post" ng-repeat="post in data.posts">
           <div>

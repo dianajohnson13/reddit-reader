@@ -1,18 +1,34 @@
 angular.module('reader.subreddit', [])
 
 .controller('SubRedditController', function ($scope, PostGetter, $location) {
-  $scope.data = {};
+  $scope.data = {
+    posts: [],
+    after: null,
+    allow_next: true
+  };
   $scope.data.subreddits = {};
 
+  // added the allow_next lock here because the infinite scrolling was causing
+  // a race condition between updating 'after' / adding new posts and the next
+  // update from new scrolling.
   $scope.getWhatsHot = function() {
-    PostGetter.getWhatsHot().then(function(resp) {
-      $scope.data.posts = resp.data
+    $scope.data.allow_next = false;
+    PostGetter.getWhatsHot($scope.data.after).then(function(resp) {
+      $scope.data.after = resp.data.after;
+      $scope.data.allow_next = true;
+      $scope.data.posts = $scope.data.posts.concat(resp.data.posts);
     });
   };
 
+  // please see comment above getWhatsHot .. this method should be more reuseable 
   $scope.getSubreddits = function() {
-    PostGetter.getSubreddits(Object.keys($scope.data.subreddits)).then(function(resp) {
-      $scope.data.posts = resp.data;
+    $scope.data.allow_next = false;
+    var topics = Object.keys($scope.data.subreddits);
+    var after = $scope.data.after;
+    PostGetter.getSubreddits(topics, after).then(function(resp) {
+      $scope.data.after = resp.data.after;
+      $scope.data.allow_next = true;
+      $scope.data.posts = $scope.data.posts.concat(resp.data.posts);
     });
   };
 
@@ -24,6 +40,9 @@ angular.module('reader.subreddit', [])
   }
 
   $scope.directUrlPath = function() {
+    $scope.data.posts = [];
+    $scope.data.after = null;
+
     urlpath = $location.path();
     switch (urlpath) {
       case "/":
@@ -37,6 +56,15 @@ angular.module('reader.subreddit', [])
         $scope.getSubreddits();
     }
   }();
+
+  $scope.getMorePosts = function() {
+    var numSubreddits = Object.keys($scope.data.subreddits).length;
+    if (numSubreddits === 0 && $scope.data.allow_next) {
+      $scope.getWhatsHot();
+    } else if ($scope.data.allow_next) {
+      $scope.getSubreddits();
+    }
+  }
 
   $scope.updatepath = function() {
     path = "/" + Object.keys($scope.data.subreddits).join("+");

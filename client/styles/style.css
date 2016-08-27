@@ -44,3 +44,10 @@ a:hover {
 .post-title {
   font-weight: bold;
 }
+
+#spinner {
+    text-align: center;
+    display: block;
+    margin: auto;
+    padding-top: 20px;
+}

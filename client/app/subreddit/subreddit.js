@@ -88,4 +88,12 @@ angular.module('reader.subreddit', [])
     return relTime;
   }
 
+  $scope.getCommmentsUrl = function(postData) { 
+    return "https://www.reddit.com/r/"+postData.subreddit+"/comments/"+postData.id;
+  }
+
+  $scope.getAuthorUrl = function(postData) {
+    return "https://www.reddit.com/user/"+postData.author;
+  }
+
 });

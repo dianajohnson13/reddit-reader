@@ -21,7 +21,7 @@ angular.module('reader.subreddit', [])
       var topics = Object.keys($scope.data.subreddits);
       PostGetter.getSubreddits(topics, after).then(handleNewPosts);
     }
-    
+
     function handleNewPosts(resp) {
       $scope.data.after = resp.data.after;
       $scope.data.allow_next = true;
@@ -92,6 +92,10 @@ angular.module('reader.subreddit', [])
 
   $scope.getAuthorUrl = function(postData) {
     return "https://www.reddit.com/user/"+postData.author;
+  }
+
+  $scope.httpToHttps = function(url) {
+    return url.replace(/^http:/, 'https:');
   }
 
 });

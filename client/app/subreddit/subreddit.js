@@ -11,29 +11,26 @@ angular.module('reader.subreddit', [])
   // added the allow_next lock here because the infinite scrolling was causing
   // a race condition between updating 'after' / adding new posts and the next
   // update from new scrolling.
-  $scope.getWhatsHot = function() {
+  $scope.getPosts = function(type) {
     $scope.data.allow_next = false;
-    PostGetter.getWhatsHot($scope.data.after).then(function(resp) {
-      $scope.data.after = resp.data.after;
-      $scope.data.allow_next = true;
-      $scope.data.posts = $scope.data.posts.concat(resp.data.posts);
-    });
-  };
-
-  // please see comment above getWhatsHot .. this method should be more reuseable 
-  $scope.getSubreddits = function() {
-    $scope.data.allow_next = false;
-    var topics = Object.keys($scope.data.subreddits);
     var after = $scope.data.after;
-    PostGetter.getSubreddits(topics, after).then(function(resp) {
+
+    if (type === "hot") {
+      PostGetter.getWhatsHot(after).then(handleNewPosts);
+    } else if (type == "subreddits") {
+      var topics = Object.keys($scope.data.subreddits);
+      PostGetter.getSubreddits(topics, after).then(handleNewPosts);
+    }
+    
+    function handleNewPosts(resp) {
       $scope.data.after = resp.data.after;
       $scope.data.allow_next = true;
       $scope.data.posts = $scope.data.posts.concat(resp.data.posts);
-    });
+    };
   };
 
   $scope.setSubredditsFromUrl = function(urlpath) {
-    subreddits = urlpath.slice(1, urlpath.length).split("+");
+    var subreddits = urlpath.slice(1, urlpath.length).split("+");
     subreddits.forEach(function(topic) {
       $scope.data.subreddits[topic] = topic;
     })
@@ -42,37 +39,38 @@ angular.module('reader.subreddit', [])
   $scope.directUrlPath = function() {
     $scope.data.posts = [];
     $scope.data.after = null;
+    var urlpath = $location.path();
 
-    urlpath = $location.path();
     switch (urlpath) {
       case "/":
-        $scope.getWhatsHot();
+        $scope.getPosts("hot");
         break;
       case "/hot":
-        $scope.getWhatsHot();
+        $scope.getPosts("hot");
         break;
       default:
         $scope.setSubredditsFromUrl(urlpath);
-        $scope.getSubreddits();
+        $scope.getPosts("subreddits");
     }
+    
   }();
 
   $scope.getMorePosts = function() {
     var numSubreddits = Object.keys($scope.data.subreddits).length;
     if (numSubreddits === 0 && $scope.data.allow_next) {
-      $scope.getWhatsHot();
+      $scope.getPosts("hot");
     } else if ($scope.data.allow_next) {
-      $scope.getSubreddits();
+      $scope.getPosts("subreddits");
     }
   }
 
   $scope.updatepath = function() {
-    path = "/" + Object.keys($scope.data.subreddits).join("+");
+    var path = "/" + Object.keys($scope.data.subreddits).join("+");
     $location.path(path);
   }
 
   $scope.addTopic = function(newTopic) {
-    if (typeof newTopic !== "undefined" && newTopic !== "") {
+    if (newTopic !== undefined && newTopic !== "" && newTopic !== "null") {
       $scope.data.subreddits[newTopic] = newTopic;
       $scope.updatepath();
     }

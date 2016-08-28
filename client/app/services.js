@@ -4,21 +4,22 @@ angular.module('reader.services', [])
 
   var getWhatsHot = function (after) {
     return $http({
-      method: 'POST',
-      url: '/api/hot',
-      data: {after: after}
+      method: "GET",
+      url: "/api/hot?after=" + after 
     })
     .then(function (resp) {
-      console.log(resp)
       return resp;
     });
   };
 
   var getSubreddits = function (topics, after) {
+    var topicsStr = topics.map(function(topic) {
+      return "subreddit=" + topic;
+    }).join("&");
+
     return $http({
-      method: 'POST',
-      url: '/api/subreddits',
-      data: {topics: topics, after: after}
+      method: "GET",
+      url: "/api/posts?" + topicsStr + "&after=" + after
     })
     .then(function (resp) {
       return resp;

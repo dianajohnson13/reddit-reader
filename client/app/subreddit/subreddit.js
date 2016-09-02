@@ -1,15 +1,13 @@
 angular.module('reader.subreddit', [])
 
-.controller('SubRedditController', function ($scope, PostGetter, $location, $timeout) {
+.controller('SubRedditController', function ($scope, PostGetter, $location, $timeout, FlashFactory) {
   $scope.data = {
     posts: [],
     after: null,
     allow_next: true
   };
   $scope.data.subreddits = {};
-  $scope.data.alertMessages = {
-    addingSubreddits: {danger: null}
-  }; 
+  $scope.data.alertMessages = FlashFactory.getAlertMessages();
 
   // added the allow_next lock here because the infinite scrolling was causing
   // a race condition between updating 'after' / adding new posts and the next
@@ -26,9 +24,18 @@ angular.module('reader.subreddit', [])
     }
 
     function handleNewPosts(resp) {
-      $scope.data.after = resp.data.after;
-      $scope.data.allow_next = true;
-      $scope.data.posts = $scope.data.posts.concat(resp.data.posts);
+      if (resp.data === "" || resp.data.posts.length === 0) {
+        // if multiple subreddits were searched and no posts were found an empty string is returned as data
+        // if a single subreddit was searched and no posts were found, the resp.data.posts array is empty
+        $scope.flashAlert('addingSubreddits','danger', 'Woops! No posts found. Redirecting to hot posts.');
+        $scope.data.subreddits = {};
+        $scope.data.allow_next = true;
+        $scope.updatepath();
+      } else {
+        $scope.data.after = resp.data.after;
+        $scope.data.allow_next = true;
+        $scope.data.posts = $scope.data.posts.concat(resp.data.posts);
+      }
     };
   };
 
@@ -106,11 +113,31 @@ angular.module('reader.subreddit', [])
   }
 
   $scope.flashAlert = function(category, type, message) {
-    $scope.data.alertMessages[category][type] = message;
-
+    $scope.data.alertMessages[category][type] = FlashFactory.addAlert(category, type, message);
+    
     $timeout(function() {
-      $scope.data.alertMessages[category][type] = null;
+      $scope.data.alertMessages[category][type] = FlashFactory.removeAlert(category, type);
     }, 5000)
   }
 
-});
+})
+.factory('FlashFactory', function() {
+    var alertMessages = { addingSubreddits: {danger: null} };
+
+    return {
+      getAlertMessages: function() {
+        return alertMessages;
+      },
+
+      addAlert: function(category, type, message) {
+        alertMessages[category][type] = message;
+        return message;
+      },
+
+      removeAlert: function(category, type) {
+        alertMessages[category][type] = null;
+        return null;
+      }
+    }
+
+})

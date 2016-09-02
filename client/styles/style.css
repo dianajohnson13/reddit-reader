@@ -26,6 +26,12 @@ a:hover {
   display: inline;
 }
 
+/* alert */
+
+#alert-box {
+  margin-top: 1em;
+}
+
 /* posts */
 
 #posts ul {

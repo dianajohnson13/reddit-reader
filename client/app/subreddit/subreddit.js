@@ -1,12 +1,15 @@
 angular.module('reader.subreddit', [])
 
-.controller('SubRedditController', function ($scope, PostGetter, $location) {
+.controller('SubRedditController', function ($scope, PostGetter, $location, $timeout) {
   $scope.data = {
     posts: [],
     after: null,
     allow_next: true
   };
   $scope.data.subreddits = {};
+  $scope.data.alertMessages = {
+    addingSubreddits: {danger: null}
+  }; 
 
   // added the allow_next lock here because the infinite scrolling was causing
   // a race condition between updating 'after' / adding new posts and the next
@@ -73,6 +76,8 @@ angular.module('reader.subreddit', [])
     if (newTopic !== undefined && newTopic !== "" && newTopic !== "null") {
       $scope.data.subreddits[newTopic] = newTopic;
       $scope.updatepath();
+    } else {
+      $scope.flashAlert('addingSubreddits','danger', 'Woops! That is not a valid subreddit.');
     }
   }
 
@@ -96,6 +101,14 @@ angular.module('reader.subreddit', [])
 
   $scope.httpToHttps = function(url) {
     return url.replace(/^http:/, 'https:');
+  }
+
+  $scope.flashAlert = function(category, type, message) {
+    $scope.data.alertMessages[category][type] = message;
+
+    $timeout(function() {
+      $scope.data.alertMessages[category][type] = null;
+    }, 5000)
   }
 
 });

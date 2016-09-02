@@ -73,11 +73,13 @@ angular.module('reader.subreddit', [])
   }
 
   $scope.addTopic = function(newTopic) {
-    if (newTopic !== undefined && newTopic !== "" && newTopic !== "null") {
-      $scope.data.subreddits[newTopic] = newTopic;
-      $scope.updatepath();
-    } else {
+    if (newTopic === undefined || newTopic === "" || newTopic === "null") {
       $scope.flashAlert('addingSubreddits','danger', 'Woops! That is not a valid subreddit.');
+    } else if (newTopic.trim().search(/\W/g) > -1) {
+      $scope.flashAlert('addingSubreddits','danger', 'Woops! Subreddits should not include spaces. Try '+ newTopic.replace(/ /g,''));
+    } else {
+      $scope.data.subreddits[newTopic] = newTopic.trim();
+      $scope.updatepath();
     }
   }
 

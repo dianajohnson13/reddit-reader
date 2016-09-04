@@ -13,6 +13,14 @@
     "body-parser": "^1.15.2",
     "bower": "^1.7.9",
     "express": "^4.14.0",
+    "karma": "^1.2.0",
     "redwrap": "0.0.4"
+  },
+  "devDependencies": {
+    "jasmine": "^2.5.0",
+    "karma": "^1.2.0",
+    "karma-jasmine": "^1.0.2",
+    "karma-chrome-launcher": "^0.1.4",
+    "karma-cli": "0.0.4"
   }
 }

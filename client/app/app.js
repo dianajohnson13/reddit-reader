@@ -6,7 +6,7 @@ angular.module('reader', [
 ])
 .config(function($routeProvider, $httpProvider, $locationProvider) {
   $routeProvider
-    .when('/*', {
+    .when('/', {
       templateUrl: 'app/subreddit/subreddit.html',
       controller: 'SubRedditController'
     })

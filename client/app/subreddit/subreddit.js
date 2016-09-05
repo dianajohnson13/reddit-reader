@@ -63,7 +63,7 @@ angular.module('reader.subreddit', [])
         $scope.getPosts("subreddits");
     }
     
-  }();
+  };
 
   $scope.getMorePosts = function() {
     var numSubreddits = Object.keys($scope.data.subreddits).length;
@@ -119,6 +119,8 @@ angular.module('reader.subreddit', [])
       $scope.data.alertMessages[category][type] = FlashFactory.removeAlert(category, type);
     }, 5000)
   }
+
+  $scope.directUrlPath();
 
 })
 .factory('FlashFactory', function() {
